@@ -5,17 +5,14 @@
 class Chrono {
 	//private properties
 	int _h=0, _m=0, _s=0; //hour:minute:second
-	static int nb_object;//how many Chrono object use ?
 //for calculs
 	static const int MINUTE_PER_HOUR = 60;
 	static const int SEC_PER_MINUTE = 60;
 public:
 	//2 constructors with nb_object counter and overflow detection
-	Chrono(int heure, int minute, int seconde);
-	Chrono() = default;
+	Chrono(int heure=0, int minute=0, int seconde=0);
 	Chrono(const std::string heure);
-	//destructor for count down object counter
-	~Chrono();
+
 
 	//add function
 	Chrono& add_second(int value);
@@ -34,12 +31,8 @@ public:
 	int      s() const { return _s; }
 	int       m() const { return _m; }
 	int       h() const { return _h; }
-	operator int() const {
+	int read() const {
 		return _h * MINUTE_PER_HOUR*SEC_PER_MINUTE + _m * SEC_PER_MINUTE + _s;
-	}
-	//static function
-	static int nb_instance() {
-		return nb_object;
 	}
 private:
 	//method only for method of the class
@@ -49,4 +42,10 @@ private:
 	// string to Chrono conversion with throw error
 	Chrono& string_to_chrono(std::string heure);
 };
+
+std::ostream& operator<<(std::ostream& os, const Chrono& chrono); 
+std::istream& operator>>(std::istream& is, Chrono& chrono); 
+
+
+
 
