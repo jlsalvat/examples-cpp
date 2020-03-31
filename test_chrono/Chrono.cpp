@@ -2,20 +2,14 @@
 using namespace std;
 
 	//2 constructors with nb_object counter and overflow detection
-	Chrono::Chrono(int heure = 0, int minute = 0, int seconde = 0) :
+	Chrono::Chrono(int heure , int minute , int seconde ) :
 		_h(heure), _m(minute), _s(seconde) {
-		nb_object++;
 		if (is_overflow()) {
 			throw string("error overflow ");
 		}
 	}
 	Chrono::Chrono(const string heure) {
-		nb_object++;
 		*this = string_to_chrono(heure);
-	}
-	//destructor for count down object counter
-	Chrono::~Chrono() {
-		nb_object--;
 	}
 	Chrono& Chrono::operator+=(const Chrono& heure) {
 		(*this).add_second(heure.s()).add_minute(heure.m()).add_heure(heure.h());
@@ -36,20 +30,20 @@ using namespace std;
 		_m = _m + (value / SEC_PER_MINUTE) % MINUTE_PER_HOUR;
 		_h = _h + value / (MINUTE_PER_HOUR*SEC_PER_MINUTE);
 		if (is_overflow())
-			raz();
+			throw string("error overflow ");
 		return *this;
 	}
 	Chrono& Chrono::add_minute(int value) {
 		_m += (_m + value) % MINUTE_PER_HOUR;
 		_h = _h + _m / MINUTE_PER_HOUR;
 		if (is_overflow())
-			raz();
+			throw string("error overflow ");
 		return *this;
 	}
 	Chrono& Chrono::add_heure(int value) {
 		_h += value;
 		if (is_overflow())
-			raz();
+			throw string("error overflow ");
 		return *this;
 	}
 
@@ -68,5 +62,16 @@ using namespace std;
 		}
 		return *this;
 	}
+
+	std::ostream& operator<<(std::ostream& os, const Chrono& chrono) {
+		return os << chrono.h() << ":" << chrono.m() << ":" << chrono.s();
+	}
+	std::istream& operator>>(std::istream& is, Chrono& chrono) {
+		std::string s;
+		is >> s;
+		chrono = s; // conversion method from string to chrono
+		return is;
+	}
+
 
 
